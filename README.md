@@ -46,3 +46,45 @@ pip install streamlit folium streamlit_folium geocoder plyer
 
 # 4. Launch the app
 streamlit run main.py
+## 📂 Dataset Format
+
+| Column     | Type   | Description                         |
+|------------|--------|-------------------------------------|
+| `Name`     | text   | Plant / reactor identifier          |
+| `Latitude` | float  | Decimal latitude                    |
+| `Longitude`| float  | Decimal longitude                   |
+| `Age`      | int    | Reactor age (years) – used for safety tier |
+
+> See **`data2.csv`** for a minimal example.
+
+---
+
+## 🖥️ How It Works
+
+- **Location** – Your lat/long is fetched with `geocoder.ip('me')`.
+- **Safety Score** – Each row’s `Age` is mapped to a safety tier:
+  - 🟢 **Safe**: `< 15 years`
+  - 🟡 **Moderate**: `20 - 39 years`
+  - 🔴 **Dangerous**: `≥ 40 years`
+- **Distance Check** – `geopy.distance.geodesic` computes the distance (in km) between your location and each plant.
+- **Map Render** – All plants are visualized as colored radius circles (30 km) using `folium`. Your current location is marked with a custom icon.
+- **Alerts** – If any plant within `≤ 500 km` is labeled as *Dangerous*, a warning appears in-app and an OS desktop notification is triggered (via `plyer`).
+
+---
+
+## 🛣️ Roadmap
+
+- [ ] Parameterise thresholds (distance, age ranges)
+- [ ] Plug in live radiation APIs (e.g., EPA RadNet)
+- [ ] Dockerfile for one‑command deployment
+- [ ] Dark‑mode map toggle
+
+---
+
+## 🤝 Contributing
+
+1. **Fork** the project  
+2. **Create** your feature branch:  
+   ```bash
+   git checkout -b feature/awesome-feature
+
